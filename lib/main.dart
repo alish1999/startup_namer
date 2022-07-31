@@ -45,6 +45,12 @@ class _RandomWordsState extends State<RandomWords> {
                   pair.asPascalCase,
                   style: _biggerFont,
                 ),
+                trailing: const Icon(Icons.delete),
+                onTap: () => setState(() {
+                  _saved.remove(pair);
+                  Navigator.of(context).pop();
+                  _pushSaved();
+                }),
               );
             },
           );
