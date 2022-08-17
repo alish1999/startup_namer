@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const RandomWords(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -34,6 +35,7 @@ class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _saved = <WordPair>{};
   final _biggerFont = const TextStyle(fontSize: 18); // NEW
+  var _button = 0;
   void _pushSaved() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -72,6 +74,47 @@ class _RandomWordsState extends State<RandomWords> {
     );
   }
 
+  void _buttonCount() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Stupid button'),
+              actions: [
+                IconButton(
+                  onPressed: () => setState(() {
+                    _button = 0;
+                    Navigator.of(context).pop();
+                    _buttonCount();
+                  }),
+                  icon: const Icon(Icons.restore),
+                  tooltip: "Reset the stupid button",
+                )
+              ],
+            ),
+            body: Center(
+              child: TextButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromARGB(255, 76, 244, 54))),
+                child: Text(_button.toString(),
+                    style: TextStyle(
+                      fontSize: (_button.toDouble() + 10),
+                    )),
+                onPressed: () => setState(() {
+                  _button = _button + 10;
+                  Navigator.of(context).pop();
+                  _buttonCount();
+                }),
+              ),
+            ),
+          );
+        },
+      ), // ...to here.
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,6 +125,11 @@ class _RandomWordsState extends State<RandomWords> {
             icon: const Icon(Icons.list),
             onPressed: _pushSaved,
             tooltip: 'Saved Suggestions',
+          ),
+          IconButton(
+            icon: const Icon(Icons.egg),
+            onPressed: _buttonCount,
+            tooltip: 'Stupid Button',
           )
         ],
       ),
